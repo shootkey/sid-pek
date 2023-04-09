@@ -1746,18 +1746,28 @@
     <script>
       const submitBtn = document.getElementById("submit-button");
 
+      // state -> submitting
       const handleSubmit = (event) => {
         event.preventDefault();
-
+        const formBtn = document.getElementById("submit-button");
         const myForm = event.target;
         const formData = new FormData(myForm);
         console.log("form data", new URLSearchParams(formData).toString());
+
         fetch("/", {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: new URLSearchParams(formData).toString(),
         })
-          .then(() => console.log("Form successfully submitted"))
+          .then(() => {
+            console.log("Form successfully submitted");
+            formBtn.value = "Submitted";
+            const submitTimeout = setTimeout(() => {
+              formBtn.value = "submit";
+              myForm.reset();
+              clearTimeout(submitTimeout);
+            }, 1500);
+          })
           .catch((error) => alert(error));
       };
 
